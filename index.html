@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Giphy API</title>
+</head>
+<body>
+    <h1>Giphy API Assignment</h1>
+
+    <div id="animal-buttons">
+        <button class="button" id="shark" data-search="shark">Shark</button>
+        <button class="button" id="tiger" data-search="tiger">Tiger</button>
+        <button class="button" id="lion" data-search="lion">Lion</button>
+    </div>
+    <br>
+    <br>
+    <form id="search-animal"></form>
+        <label for="animal-input">Your next animal.</label>
+        <input type="text" id="animal-input">
+    <br>
+
+        <input id="find-animal" type="submit" value="Search Animal">
+    <br>
+
+    <div id="animal-view"></div>
+
+    
+    
+
+    <!-- jQuery/js for query pull  -->
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+
+$(".button").on("click", function(){
+    let i = $(this).data("search");
+    console.log(i);
+});
+
+  
+  
+  </script>
+    
+</body>
+</html>
