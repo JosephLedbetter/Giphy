@@ -10,40 +10,70 @@
     <h1>Giphy API Assignment</h1>
 
     <div id="animal-buttons">
-        <button class="button" id="shark" data-search="shark">Shark</button>
-        <button class="button" id="tiger" data-search="tiger">Tiger</button>
-        <button class="button" id="lion" data-search="lion">Lion</button>
+        <button data-animal="shark">Shark</button>
+        <button data-animal="tiger">Tiger</button>
+        <button data-animal="lion">Lion</button>
     </div>
     <br>
     <br>
     <form id="search-animal"></form>
         <label for="animal-input">Your next animal.</label>
         <input type="text" id="animal-input">
+        <button id="find-animal" type="submit">Search Animal</button>
     <br>
-
-        <input id="find-animal" type="submit" value="Search Animal">
-    <br>
-
-    <div id="animal-view"></div>
-
-    
-    
+    <div id="gif-appears-here"></div>
 
     <!-- jQuery/js for query pull  -->
     <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
-
   <script type="text/javascript">
 
-$(".button").on("click", function(){
-    let i = $(this).data("search");
-    console.log(i);
-});
+$("button").on("click", function(){
+    let searchItem = $(this).attr("data-animal");
+    console.log(searchItem);
 
-  
-  
+    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + searchItem + "&api_key=u3Z362gdKjh0GIuAno1BUrOM2LlS5jQx&limit=11";
+    console.log(queryURL);
+
+    $.ajax({
+        url: queryURL,
+        method: "GET",
+    }).then(function(results) {
+
+        var response = results.data;
+        console.log(response);
+
+        for (var i = 0; i < response.length; i++);
+
+        console.log(response[6].rating);
+
+        var animalDiv = $("<div>");
+
+        var p = $("<p>" + response[6].rating + "</p>");
+
+        var image = $("<img>");
+
+        image.attr("src", response[6].images.fixed_height_still.url);
+
+        animalDiv.append(p);
+        animalDiv.append(image);
+
+        $("#gif-appears-here").prepend(animalDiv);
+        
+
+
+        // var animalDiv = $("<div>"); 
+        // var p = $("<p>").text(response);
+        //  animalDiv.append(p);
+        //  $("#gifs-appear-here").prepend(animalDiv); 
+
+    });
+});
+        
+
+
   </script>
     
 </body>
