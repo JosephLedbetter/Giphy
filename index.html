@@ -45,29 +45,42 @@ $("button").on("click", function(){
         var response = results.data;
         console.log(response);
 
-        for (var i = 0; i < response.length; i++);
+        for (var i = 0; i < response.length; i++) {
 
-        console.log(response[6].rating);
+        console.log(response[i].rating);
 
         var animalDiv = $("<div>");
 
-        var p = $("<p>" + response[6].rating + "</p>");
+        var p = $("<p>" + response[i].rating + "</p>");
 
         var image = $("<img>");
 
-        image.attr("src", response[6].images.fixed_height_still.url);
+        image.attr("src", response[i].images.fixed_height_still.url);
+
+        image.on("click", function(){
+                console.log("firing");
+                var state = $(this).attr("data-state");
+
+                if (state === "still") {
+                    $(this).attr("src", $(this).attr("data-animate"));
+                    $(this).att("data/state", "animate");
+                }
+
+                else {
+                    $(this).attr("src", $(this).attr("data-still"));
+                    $(this).attr("data-state", "still");
+                }
+
+            })
 
         animalDiv.append(p);
         animalDiv.append(image);
 
         $("#gif-appears-here").prepend(animalDiv);
-        
+        }
+    
 
 
-        // var animalDiv = $("<div>"); 
-        // var p = $("<p>").text(response);
-        //  animalDiv.append(p);
-        //  $("#gifs-appear-here").prepend(animalDiv); 
 
     });
 });
