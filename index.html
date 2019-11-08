@@ -9,19 +9,17 @@
 <body>
     <h1>Giphy API Assignment</h1>
 
-    <div id="animal-buttons">
-        <button data-animal="shark">Shark</button>
-        <button data-animal="tiger">Tiger</button>
-        <button data-animal="lion">Lion</button>
+    <div id="buttons">
+       
     </div>
     <br>
     <br>
     <form id="search-animal"></form>
         <label for="animal-input">Your next animal.</label>
-        <input type="text" id="animal-input" name="animal-search">
-        <button id="find-animal" type="submit">Search Animal</button>
+        <input type="text" id="input" name="animal-search">
+        <button id="submit" type="submit">Search Animal</button>
     <br>
-    <div id="gif-appears-here"></div>
+    <div id="results"></div>
 
     <!-- jQuery/js for query pull  -->
     <script
@@ -30,89 +28,92 @@
   crossorigin="anonymous"></script>
   <script type="text/javascript">
 
-let tag = ""
 
-console.log(tag);
+const key = "u3Z362gdKjh0GIuAno1BUrOM2LlS5jQx"
+let tag = "";
 
-function newButton (){
+function newButton() {
     let newButton = $("<button>").text(tag);
     newButton.attr("class", "search-tag");
 
-    $("#animal-buttons").append(newButton);
+    //Prepends new search tag to beginning of search tag area
+    $("#buttons").prepend(newButton);
 }
 
-$("#find-animal").on("click", function (event) {
+$("#submit").on("click", function (event) {
     event.preventDefault();
 
-    if ($("#animal-input").val().trim() != "") {
-        tag = $("#animal-input").val().trim();
-        $("#animal-input").val("");
+    if ($("#input").val().trim() != "") {
+        tag = $("#input").val().trim();
+        $("#input").val("");
         newButton();
     }
-
     else {
-        $("#animal-input").val("");
-        alert("Please enter proper query!");
+        $("#input").val("");
+        alert("Please enter a proper query!");
     }
-
 })
 
-// begins function of search
-$("button").on("click", function(){
-    let searchItem = $("button").attr("data-animal");
-    console.log(searchItem);
+//Begins function upon clicking a search tag
+$("#buttons").on("click", ".search-tag", function () {
+    
+    let button = $(this)
+    const query = $(this).text();
 
-    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + searchItem + "&api_key=u3Z362gdKjh0GIuAno1BUrOM2LlS5jQx&limit=11";
-    console.log(queryURL);
+    // API query URL + API key & search variables
+    const queryURL = "https://api.giphy.com/v1/gifs/search?q=" + query + "&api_key=" + key + "&limit=10";
 
+    //Ajax get request to query URL
     $.ajax({
         url: queryURL,
-        method: "GET",
-    }).then(function(results) {
+        method: "GET"
+    })
 
-        var response = results.data;
-        console.log(response);
+        //After data from ajax get comes back
+        .then(function (response) {
+            console.log(response);
 
-        for (var i = 0; i < response.length; i++) {
+            for (let i = 0; i < response.data.length; i++) {
+                //defines variable to hold image url
+                const imageUrl = response.data[i].images.original.url;
+                const imageStill = response.data[i].images.original_still.url;
+                const imgRating = response.data[i].rating;
 
-        console.log(response[i].rating);
+                //Create new img element for cat images
+                const searchResultImg = $("<img>");
+                const searchResultRating = $("<p>");
 
-        var animalDiv = $("<div>");
+                //Add image url to src link and description to new cat img element
+                searchResultImg.attr("src", imageStill);
+                searchResultImg.attr("data-alternate-link", imageUrl)
+                searchResultImg.attr("alt", query + " image");
+                searchResultImg.attr("class", "gif");
 
-        var p = $("<p>" + response[i].rating + "</p>");
+                searchResultRating.text("This image below is rated: " + imgRating );
 
-        var image = $("<img>");
+                //Prepends new gif to beginning of page before all others
+                $("#results").prepend(searchResultImg);
+                $("#results").prepend(searchResultRating);
 
-        image.attr("src", response[i].images.fixed_height_still.url);
+            }
 
-        image.on("click", function(){
-                console.log("firing");
-                var state = $(this).attr("data-state");
-
-                if (state === "still") {
-                    $(this).attr("src", $(this).attr("data-animate"));
-                    $(this).att("data/state", "animate");
-                }
-
-                else {
-                    $(this).attr("src", $(this).attr("data-still"));
-                    $(this).attr("data-state", "still");
-                }
-
-            })
-
-        animalDiv.append(p);
-        animalDiv.append(image);
-
-        $("#gif-appears-here").prepend(animalDiv);
-        }
-    
-
-
-
-    });
+            //Removes button if the query returned no results
+            if (response.data == '') {
+                alert("No results found - please try a different query")
+                $(button).remove();
+            }
+        });
 });
-        
+
+$("#results").on("click", ".gif", function () {
+    let tempA = $(this).attr("src");
+    let tempB = $(this).attr("data-alternate-link");
+
+    $(this).attr("src", tempB);
+    $(this).attr("data-alternate-link", tempA);
+})
+
+
 
 
   </script>
