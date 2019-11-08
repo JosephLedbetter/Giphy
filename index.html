@@ -18,7 +18,7 @@
     <br>
     <form id="search-animal"></form>
         <label for="animal-input">Your next animal.</label>
-        <input type="text" id="animal-input">
+        <input type="text" id="animal-input" name="animal-search">
         <button id="find-animal" type="submit">Search Animal</button>
     <br>
     <div id="gif-appears-here"></div>
@@ -30,8 +30,36 @@
   crossorigin="anonymous"></script>
   <script type="text/javascript">
 
+let tag = ""
+
+console.log(tag);
+
+function newButton (){
+    let newButton = $("<button>").text(tag);
+    newButton.attr("class", "search-tag");
+
+    $("#animal-buttons").append(newButton);
+}
+
+$("#find-animal").on("click", function (event) {
+    event.preventDefault();
+
+    if ($("#animal-input").val().trim() != "") {
+        tag = $("#animal-input").val().trim();
+        $("#animal-input").val("");
+        newButton();
+    }
+
+    else {
+        $("#animal-input").val("");
+        alert("Please enter proper query!");
+    }
+
+})
+
+// begins function of search
 $("button").on("click", function(){
-    let searchItem = $(this).attr("data-animal");
+    let searchItem = $("button").attr("data-animal");
     console.log(searchItem);
 
     let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + searchItem + "&api_key=u3Z362gdKjh0GIuAno1BUrOM2LlS5jQx&limit=11";
